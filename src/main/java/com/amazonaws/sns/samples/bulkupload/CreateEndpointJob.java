@@ -63,6 +63,30 @@ public class CreateEndpointJob implements Runnable {
         this.badFileWriter = badFileWriter;
     }
 
+    private void retryVerifyPlatformApplication(AmazonSNS client) {
+        int retry_count = 5;
+        while(true) {
+            try {
+                verifyPlatformApplication(this.client);
+                break;
+            } catch (Exception e) {
+                retry_count--;
+                System.out.println("Exception caught. message:" + e.getMessage());
+                System.out.println(">>>>> retry count remaining: "+retry_count);
+                if (retry_count == 0) {
+                    System.exit(BatchCreatePlatformEndpointSample.NOT_FOUND_ERROR_CODE);
+                } else {
+                    try {
+                        Thread.sleep(1000); 
+                    } catch (InterruptedException ee) {
+                        System.exit(BatchCreatePlatformEndpointSample.NOT_FOUND_ERROR_CODE);
+                    }
+                    continue;
+                }
+            }
+        }
+    }
+
     public void verifyPlatformApplication(AmazonSNS client) {
         try {
             if (!BatchCreatePlatformEndpointSample.listOfRegions
@@ -103,7 +127,7 @@ public class CreateEndpointJob implements Runnable {
 
     @Override
     public void run() {
-        verifyPlatformApplication(this.client);
+        retryVerifyPlatformApplication(this.client);
         try {
             CreatePlatformEndpointResult createResult = client
                     .createPlatformEndpoint(new CreatePlatformEndpointRequest()
