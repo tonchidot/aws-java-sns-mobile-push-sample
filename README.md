@@ -1,8 +1,10 @@
-# maven project to run aws SNS sample
+# maven project to run aws SNS sample (bulk upload tokens)
 
 * Configure
 
   set credentials to AwsCredentials.properties
+  set applicationarn to BulkUpload.properties
+  set tokens to tokens.csv
 
 * Run
 
