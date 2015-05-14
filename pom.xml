@@ -11,7 +11,7 @@
     <url>http://docs.aws.amazon.com/ja_jp/sns/latest/dg/mobile-push-send-devicetoken.html</url>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -68,5 +68,19 @@
           </configuration>
         </plugin>
       </plugins>
+
+      <pluginManagement>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+              <source>1.6</source>
+              <target>1.6</target>
+              <compilerArgument></compilerArgument>
+            </configuration>
+          </plugin>
+        </plugins>
+      </pluginManagement>
     </build>
   </project>
