@@ -2,7 +2,8 @@
 
 * Requirements
 
-  * java7
+  * Linux (Mac OS X is not recommended. Sometimes throws java.net.SocketException: Invalid argument)
+  * java
   * maven
 
 * Configure
