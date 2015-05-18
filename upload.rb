@@ -9,13 +9,17 @@ FileUtils::mkdir_p 'tmp'
 unless ARGV.count == 2
   STDERR.puts <<-EOS
     usage:
-    $ ruby (this script) arn csv_path
+    $ #{$0} arn csv_path
 
     example:
-    $ ruby (this script) arn:aws:sns:ap-northeast-1:000000000:app/APNS/hogehoge tokens.csv
+    $ #{$0} arn:aws:sns:ap-northeast-1:000000000:app/APNS/hogehoge hoge_tokens.csv
 
-    input csv file should include "device_tokens" or "gcm_registration_id" column as tokens.
-    input csv file should include "alias" column as endpoint name.
+    result > tokens_good.csv, tokens_bad.csv
+    these csv's will be cleared when starting this script.
+
+    input csv file should include below columns:
+    - "device_token" or "gcm_registration_id" as tokens.
+    - "alias" as user data of the endpoint.
   EOS
   exit
 end
@@ -23,6 +27,10 @@ end
 arn = ARGV.shift
 csv_path = ARGV.shift
 tmp_csv_path = "tmp/tokens.csv"
+result_good_path = "tokens_good.csv"
+result_bad_path = "tokens_bad.csv"
+
+FileUtils.rm tmp_csv_path if File.exist? tmp_csv_path
 
 CSV.open(tmp_csv_path, "wb") do |out_csv|
   CSV.table(csv_path).each do |row|
@@ -44,6 +52,9 @@ quotechar:"
 numofthreads:10
   EOS
 end
+
+FileUtils.rm result_good_path if File.exist? result_good_path
+FileUtils.rm result_bad_path if File.exist? result_bad_path
 
 system 'mvn', 'clean', 'compile', 'exec:java'
 

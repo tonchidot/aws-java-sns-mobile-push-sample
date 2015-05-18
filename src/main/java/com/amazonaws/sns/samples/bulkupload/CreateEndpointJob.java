@@ -64,7 +64,7 @@ public class CreateEndpointJob implements Runnable {
     }
 
     private void retryVerifyPlatformApplication(AmazonSNS client) {
-        int retry_count = 5;
+        int retry_count = 10000;
         while(true) {
             try {
                 verifyPlatformApplication(this.client);
@@ -77,7 +77,7 @@ public class CreateEndpointJob implements Runnable {
                     System.exit(BatchCreatePlatformEndpointSample.NOT_FOUND_ERROR_CODE);
                 } else {
                     try {
-                        Thread.sleep(1000); 
+                        Thread.sleep(3000); 
                     } catch (InterruptedException ee) {
                         System.exit(BatchCreatePlatformEndpointSample.NOT_FOUND_ERROR_CODE);
                     }
@@ -139,7 +139,7 @@ public class CreateEndpointJob implements Runnable {
                         + "[SUCCESS] The endpoint was created with Arn "
                         + createResult.getEndpointArn());
                 lock.lock();
-                ((PrintWriter) goodFileWriter).println("<" + lineNumber + "> "
+                ((PrintWriter) goodFileWriter).println("" + lineNumber + ","
                         + createResult.getEndpointArn() + "," + this.token
                         + "," + this.userData);
                 goodFileWriter.flush();
@@ -160,8 +160,9 @@ public class CreateEndpointJob implements Runnable {
                                 + "[ERROR] The endpoint could not be created because of an AmazonServiceException. "
                                 + ase.getMessage());
                 lock.lock();
-                ((PrintWriter) badFileWriter).println("<" + lineNumber + "> "
-                        + this.token + "," + this.userData);
+                ((PrintWriter) badFileWriter).println("" + lineNumber + ","
+                        + this.token + "," + this.userData
+                        + "AmazonServiceException: " + ase.getMessage().replace(","," "));
                 badFileWriter.flush();
             } catch (IOException ioe) {
                 System.err.println("[ERROR] Error initiating write to"
@@ -181,7 +182,8 @@ public class CreateEndpointJob implements Runnable {
                                 + ace.getMessage());
                 ((PrintWriter) badFileWriter).println("<" + lineNumber + "> "
                         + ace.getMessage() + " " + this.token + ","
-                        + this.userData);
+                        + this.userData + ","
+                        + "AmazonClientException: " + ace.getMessage().replace(","," "));
                 badFileWriter.flush();
             } catch (IOException ioe) {
                 System.err.println("[ERROR] Error initiating write to"

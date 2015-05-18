@@ -163,16 +163,18 @@ public class BatchCreatePlatformEndpointSample {
         }
 
         try {
-            goodFileWriter = new PrintWriter(new FileWriter(this.goodFileName,
-                    true));
+            goodFileWriter = new PrintWriter(new FileWriter(this.goodFileName, true));
+            ((PrintWriter) goodFileWriter).println("line_number,endpoint_arn,token,user_data");
+            goodFileWriter.flush();
         } catch (IOException ioe) {
             System.err.println("[ERROR] Error initiating write to "
                     + this.goodFileName + ": " + ioe.getMessage());
             System.exit(FILE_ACCESS_FAILURE_ERROR_CODE);
         }
         try {
-            badFileWriter = new PrintWriter(new FileWriter(this.badFileName,
-                    true));
+            badFileWriter = new PrintWriter(new FileWriter(this.badFileName, true));
+            ((PrintWriter) badFileWriter).println("line_number,token,user_data,error");
+            badFileWriter.flush();
         } catch (IOException ioe) {
             System.err.println("[ERROR] Error initiating write to "
                     + this.badFileName + ": " + ioe.getMessage());
