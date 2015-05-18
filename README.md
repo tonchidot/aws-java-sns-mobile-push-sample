@@ -6,15 +6,28 @@
   * java
   * maven
 
-* Configure
+* To Run upload.rb
 
-  * set aws credentials to AwsCredentials.properties
-  * set applicationarn to BulkUpload.properties
-  * set tokens to tokens.csv
+  * Configure 
 
-* Run
+    * set aws credentials to AwsCredentials.properties
+    * a csv file that has token column and alias column. token column should be named as "device_token" or "gcm_registration_id".
 
-  mvn clean compile exec:java
+  * Run
+
+    * ruby upload.rb arn:aws:sns:ap-northeast-1:000000000:app/APNS/hogehoge tokens.csv
+
+* To Run java directory
+
+  * Configure
+
+    * set aws credentials to AwsCredentials.properties
+    * set applicationarn to BulkUpload.properties
+    * set tokens to tokens.csv
+
+  * Run
+
+    mvn clean compile exec:java
 
 * Source files are from this zip
 
