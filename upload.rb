@@ -6,15 +6,15 @@ require 'csv'
 require 'fileutils'
 
 FileUtils::mkdir_p 'tmp'
-unless ARGV.count == 2
+unless ARGV.count == 3
   STDERR.puts <<-EOS
     usage:
-    $ #{$0} arn csv_path
+    $ #{$0} arn csv_path output_csv_prefix
 
     example:
-    $ #{$0} arn:aws:sns:ap-northeast-1:000000000:app/APNS/hogehoge hoge_tokens.csv
+    $ #{$0} arn:aws:sns:ap-northeast-1:000000000:app/APNS/hogehoge hoge_tokens.csv hoge
 
-    result > tokens_good.csv, tokens_bad.csv
+    result > hoge_good.csv, hoge_bad.csv
     these csv's will be cleared when starting this script.
 
     input csv file should include below columns:
@@ -26,9 +26,10 @@ end
 
 arn = ARGV.shift
 csv_path = ARGV.shift
+output_prefix = ARGV.shift
 tmp_csv_path = "tmp/tokens.csv"
-result_good_path = "tokens_good.csv"
-result_bad_path = "tokens_bad.csv"
+result_good_path = "#{output_prefix}_good.csv"
+result_bad_path = "#{output_prefix}_bad.csv"
 
 FileUtils.rm tmp_csv_path if File.exist? tmp_csv_path
 
@@ -45,8 +46,8 @@ File.open(prop_path, "w") do |f|
   f.write <<-EOS
 applicationarn:#{arn}
 csvfilename:tmp/tokens.csv
-goodfilename:tokens_good.csv
-badfilename:tokens_bad.csv
+goodfilename:#{result_good_path}
+badfilename:#{result_bad_path}
 delimiterchar:,
 quotechar:"
 numofthreads:10
