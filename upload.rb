@@ -34,7 +34,7 @@ result_bad_path = "#{output_prefix}_bad.csv"
 FileUtils.rm tmp_csv_path if File.exist? tmp_csv_path
 
 CSV.open(tmp_csv_path, "wb") do |out_csv|
-  CSV.table(csv_path).each do |row|
+  CSV.table(csv_path, {converters: nil}).each do |row|
     token = row[:device_token] || row[:gcm_registration_id]
     name = row[:alias]
     out_csv << [token,name]
